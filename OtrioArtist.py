@@ -35,10 +35,15 @@ class OtrioArtist:
         # math out from the board size what is the right placement
         # of the positions and the sizes of the donuts
         self.centers = []
+        for ynum in (1,3,5):
+            for xnum in (1,3,5):
+                xc = int(xnum * (hw/6))
+                yc = int(ynum * (hw/6))
+                self.centers.append((xc, yc))
         # leave position [0] as a placeholder so you can index
         # like self.radii[MED] or whatever
-        self.radii = [0,5,10,15]
-        self.thick = [0,5,5,5]
+        self.radii = [0,int(hw/3 * .09),int(hw/3 * .245), int(hw/3 * .40)]
+        self.thick = [0,-5,7,7]
 
     def draw_donut(self, xy, r, t, c):
         '''
@@ -51,15 +56,17 @@ class OtrioArtist:
         '''
         cv2.circle(self.img, xy, r, c, t) # note c/t switched order
 
-    def place_piece(self, which, where, color):
+    def place_piece(self, which, color, where):
         '''
         Draw a donut to indicate a piece being played
         :param which: Which size of piece? SMA,MED,BIG
-        :param where: Position 0-8
         :param color: One of the player colors
+        :param where: Position 0-8
         :return: None
         '''
-        pass
+        self.draw_donut(self.centers[where], self.radii[which],
+                        self.thick[which], color)
+
 
     def new_board(self):
         '''
@@ -67,8 +74,9 @@ class OtrioArtist:
         grey donuts indicating all the empty spaces for pieces
         :return:
         '''
-        pass
-
+        for item in (SMA, MED, BIG):
+            for i in range(9):
+                self.place_piece(item, GRY, i)
 
 
 
@@ -77,14 +85,11 @@ if __name__ == '__main__':
     colors = [RED, GRN, BLU, YLW, REDl, GRNl, BLUl, YLWl]
     board = OtrioArtist()
 
-    for i in range(20):
-        # choose a random position/size
-        ctr = (np.random.randint(100,400), np.random.randint(100,400))
-        radius = np.random.randint(5,50)
-        thickness = np.random.randint(-1,5)
-        ci = i % len(colors) # cycle through the colors
-        board.draw_donut(ctr, radius, thickness, colors[ci])
-
+    board.new_board()
+    board.place_piece(MED, RED, 4)
+    board.place_piece(SMA, BLU, 0)
+    board.place_piece(BIG, YLW, 7)
+    board.place_piece(SMA, GRN, 4)
     cv2.imwrite('donuts.png', board.img)
 
 

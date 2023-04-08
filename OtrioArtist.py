@@ -56,7 +56,7 @@ class OtrioArtist:
         '''
         cv2.circle(self.img, xy, r, c, t) # note c/t switched order
 
-    def place_piece(self, which, color, where):
+    def draw_piece(self, which, color, where):
         '''
         Draw a donut to indicate a piece being played
         :param which: Which size of piece? SMA,MED,BIG
@@ -70,13 +70,13 @@ class OtrioArtist:
 
     def new_board(self):
         '''
-        Starting with the black board, use place_piece to draw
+        Starting with the black board, use draw_piece to draw
         grey donuts indicating all the empty spaces for pieces
         :return:
         '''
         for item in (SMA, MED, BIG):
             for i in range(9):
-                self.place_piece(item, GRY, i)
+                self.draw_piece(item, GRY, i)
 
     def im_save(self, fname):
         '''
@@ -92,12 +92,11 @@ if __name__ == '__main__':
     board = OtrioArtist()
 
     board.new_board()
-    board.place_piece(MED, RED, 4)
-    board.place_piece(SMA, BLU, 0)
-    board.place_piece(BIG, YLW, 7)
-    board.place_piece(SMA, GRN, 4)
-    cv2.imwrite('donuts.png', board.img)
-    board.im_save()
+    board.draw_piece(MED, RED, 4)
+    board.draw_piece(SMA, BLU, 0)
+    board.draw_piece(BIG, YLW, 7)
+    board.draw_piece(SMA, GRN, 4)
+    board.im_save('donuts.png')
 
 
 

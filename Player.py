@@ -130,6 +130,21 @@ class Player:
 
 if __name__ == '__main__':
     p = Player(RED)
+
+
+    #Generate images to check all winning triplets
+    if False:
+        for i, trip in enumerate(p.wintrips):
+            for index in trip:
+                p.place(index=index)
+            board = OtrioArtist()
+            p.draw(board)
+            board.im_save('win_trip_{}.png'.format(i))
+            for index in trip:
+                p.remove(index=index)
+
+
+
     p.place(SMA, 4)
     p.place(SMA, 8)
     should_be_false = p.has_a_win()

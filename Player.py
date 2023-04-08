@@ -49,6 +49,23 @@ class Player:
         self.flags = [False]*27                # No pieces played to start
         self.wintrips = all_winning_triples()  # know where the wins are
 
+    def convert_to_wh(self, index):
+        '''
+
+        :param index:
+        :return:  which where to index calculation
+        '''
+        return (index//9+1, index%9)
+
+    def convert_to_ind(self, which, where):
+        '''
+
+        :param which:
+        :param where:
+        :return: index to which/where calculation
+        '''
+        return (which - 1) * 9 + where
+
     def place(self, which=None, where=None, index=None):
         '''
         Set the appropriate flag to indicate a played piece
@@ -57,11 +74,21 @@ class Player:
         :param index: Flag index 0-26
         :return: None
         '''
-        #pass
-        if index is not None:
-            self.flags[index] = True
-        else:
-            self.flags[(which-1)*9 + where] = True
+        if index is None:
+            index = self.convert_to_ind(which,where)
+        self.flags[index] = True
+
+    def remove(self, which=None, where=None, index=None):
+        '''
+        Set the appropriate flag to indicate a removed piece
+        :param which: SMA, MED, or BIG
+        :param where: Position index 0-8
+        :param index: Flag index 0-26
+        :return: None
+        '''
+        if index is None:
+            index = self.convert_to_ind(which, where)
+        self.flags[index] = False
 
     def draw(self, board):
         '''
@@ -71,8 +98,7 @@ class Player:
         '''
         for index in range(len(self.flags)):
             if self.flags[index]:
-                which = index//9 + 1
-                where = index%9
+                which, where = self.convert_to_wh(index)
                 board.draw_piece(which, self.color, where)
 
     def has_pieces(self, indices):

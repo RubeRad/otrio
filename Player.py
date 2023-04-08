@@ -49,22 +49,31 @@ class Player:
         self.flags = [False]*27                # No pieces played to start
         self.wintrips = all_winning_triples()  # know where the wins are
 
-    def place(self, which, where):
+    def place(self, which=None, where=None, index=None):
         '''
         Set the appropriate flag to indicate a played piece
         :param which: SMA, MED, or BIG
         :param where: Position index 0-8
+        :param index: Flag index 0-26
         :return: None
         '''
-        pass
+        #pass
+        if index is not None:
+            self.flags[index] = True
+        else:
+            self.flags[(which-1)*9 + where] = True
 
     def draw(self, board):
         '''
-        Draw all this players active pieces onto an OtrioArtist
+        Draw all this player's active pieces onto an OtrioArtist
         :param board: an OtrioArtist (may have other Player's pieces already drawn)
         :return: None
         '''
-        pass
+        for index in range(len(self.flags)):
+            if self.flags[index]:
+                which = index//9 + 1
+                where = index%9
+                board.draw_piece(which, self.color, where)
 
     def has_pieces(self, indices):
         '''
@@ -110,4 +119,4 @@ if __name__ == '__main__':
 
     board = OtrioArtist()
     p.draw(board)
-    #cv2.imwrite('p1_win.png', board.img)
+    board.im_save('gs_test1.png')

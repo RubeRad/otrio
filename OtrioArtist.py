@@ -44,6 +44,7 @@ class OtrioArtist:
         # like self.radii[MED] or whatever
         self.radii = [0,int(hw/3 * .09),int(hw/3 * .245), int(hw/3 * .40)]
         self.thick = [0,-5,7,7]
+        self.new_board()
 
     def draw_donut(self, xy, r, t, c):
         '''

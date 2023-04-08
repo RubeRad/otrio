@@ -78,7 +78,12 @@ class OtrioArtist:
             for i in range(9):
                 self.place_piece(item, GRY, i)
 
-
+    def im_save(self):
+        '''
+        Save image at each game state for visual aid for player
+        :return:
+        '''
+        cv2.imwrite('Player_Gamestate.png', self.img)
 
 
 if __name__ == '__main__':
@@ -91,6 +96,7 @@ if __name__ == '__main__':
     board.place_piece(BIG, YLW, 7)
     board.place_piece(SMA, GRN, 4)
     cv2.imwrite('donuts.png', board.img)
+    board.im_save()
 
 
 

@@ -78,12 +78,13 @@ class OtrioArtist:
             for i in range(9):
                 self.place_piece(item, GRY, i)
 
-    def im_save(self):
+    def im_save(self, fname):
         '''
         Save image at each game state for visual aid for player
+        :param fname: Filename for game state image
         :return:
         '''
-        cv2.imwrite('Player_Gamestate.png', self.img)
+        cv2.imwrite(fname, self.img)
 
 
 if __name__ == '__main__':

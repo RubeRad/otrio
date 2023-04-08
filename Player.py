@@ -4,15 +4,28 @@ from OtrioArtist import * # colors, pieces, artist class
 
 # A Player has 27 places he can put pieces, 9 SMA, 9 MED and 9 BIG
 # and the player will hold a list of 27 flags for which of those have pieces.
-# That makes for a lot of 3-tuples of indices of winning combinations
+# There are 49 unique winning configurations (per player, total 196).
 # This function will generate and return the whole list so they can
 # generate them once, at construction, and hold the list for convenient
 # looping through to check for winning moves
-# For uniqueness, only list triples in ascending order (so (0,1,2) but not (1,2,0))
+
 def all_winning_triples():
-    return [ (0,1,2),      # SMA top row
-             (4, 9+4, 18+4), # SMA,MED,BIG all in the center
-             (8,12,18) ]   # SMA LR, MED ctr, BIG UL
+    win_trip = []
+
+    #3-Ring wins (e.g. SMB at position (0,0,0))
+    for i in range(9):
+        snum = i
+        mnum = i + 9
+        bnum = i + 18
+        win_trip.append((snum, mnum, bnum))
+
+    #Same-Size wins (e.g. MMM at (0,1,2))
+    
+    return win_trip
+
+    #return [ (0,1,2),      # SMA top row
+             #(4, 9+4, 18+4), # SMA,MED,BIG all in the center
+             #(8,12,18) ]   # SMA LR, MED ctr, BIG UL
 
 
 
@@ -88,3 +101,4 @@ if __name__ == '__main__':
 
     board = OtrioArtist()
     p.draw(board)
+    #cv2.imwrite('p1_win.png', board.img)

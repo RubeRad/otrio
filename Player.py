@@ -19,15 +19,24 @@ def all_winning_triples():
         bnum = i + 18
         win_trip.append((snum, mnum, bnum))
 
-    #Same-Size wins (e.g. MMM at (0,1,2))
-    
+    #Same-Size / Diff-Size Wins
+    win_trip2 = [(0,1,2), (3,4,5), (6,7,8),              #SMA-h
+                 (9,10,11), (12,13,14), (15,16,17),      #MED-h
+                 (18,19,20), (21,22,23), (24,25,26),     #BIG-h
+                 (0,3,6), (1,4,7), (2,5,8),              #SMA-v
+                 (9,12,15), (10,13,16), (11,14,17),      #MED-v
+                 (18,21,24), (19,22,25), (20,23,26),     #BIG-v
+                 (0,4,8), (2,4,6),                       #SMA-d
+                 (9,13,17), (11,13,15),                  #MED-d
+                 (18,22,26), (20,22,24),                 #BIG-d
+                 (0,10,20), (3,13,23), (6,16,26),        #SMB-h
+                 (0,12,24), (1,13,25), (2,14,26),        #SMB-v
+                 (0,13,26), (2,13,24),                   #SMB-d
+                 (18,10,2), (21,13,5), (24,16,8),        #BMS-h
+                 (18,12,6), (19,13,7), (20,14,8),        #BMS-v
+                 (18,13,8), (20,13,6)]                   #BMS-d
+    win_trip.extend(win_trip2)
     return win_trip
-
-    #return [ (0,1,2),      # SMA top row
-             #(4, 9+4, 18+4), # SMA,MED,BIG all in the center
-             #(8,12,18) ]   # SMA LR, MED ctr, BIG UL
-
-
 
 class Player:
     def __init__(self, c):

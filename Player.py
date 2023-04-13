@@ -189,10 +189,10 @@ if __name__ == '__main__':
 
     p.place(SMA, 4)
     p.place(SMA, 8)
-    should_be_True = p.piece_size_remaining(SMA)
+    #should_be_True = p.piece_size_remaining(SMA)
     p.place(SMA, 6)
     numplay_test = p.num_played(SMA)
-    should_be_False = p.piece_size_remaining(SMA)
+    #should_be_False = p.piece_size_remaining(SMA)
     rem_pieces = p.remaining_pieces()
     #test = np.array(p.flags)
     #test_s = test[0:9]
@@ -210,7 +210,7 @@ if __name__ == '__main__':
     p.place(BIG, 2)
     p.place(index=24)
     p.place(index=12)
-    should_be_False2 = p.piece_size_remaining(BIG)
+    #should_be_False2 = p.piece_size_remaining(BIG)
     winner = p.has_a_win()
     winners = p.all_wins()
     should_be_one = len(winners)

@@ -130,7 +130,11 @@ class Player:
         pieces, not just the first one found
         :return: list of winning 3-tuples (empty list if not a winning position)
         '''
-        return []
+        wins = []
+        for trip in self.wintrips:
+            if self.has_all_pieces(trip):
+                wins.append(trip)
+        return wins
 
 
 
@@ -160,6 +164,12 @@ if __name__ == '__main__':
     should_be_false = p.has_a_win()
     p.place(SMA, 2)
     p.place(SMA, 0)
+    p.place(SMA, 1)
+    p.place(BIG, 0)
+    p.place(BIG, 1)
+    p.place(BIG, 2)
+    p.place(index=24)
+    p.place(index=12)
     winner = p.has_a_win()
     winners = p.all_wins()
     should_be_one = len(winners)

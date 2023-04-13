@@ -51,7 +51,7 @@ class Player:
 
     def convert_to_wh(self, index):
         '''
-
+        Convert overall index of position to WHICH piece and WHERE to put it
         :param index:
         :return:  which where to index calculation
         '''
@@ -59,7 +59,7 @@ class Player:
 
     def convert_to_ind(self, which, where):
         '''
-
+        Convert WHICH piece and WHERE to put it into overall index of position
         :param which:
         :param where:
         :return: index to which/where calculation
@@ -89,6 +89,38 @@ class Player:
         if index is None:
             index = self.convert_to_ind(which, where)
         self.flags[index] = False
+
+    def num_played(self, which):
+        '''
+        Track the number of pieces played
+        :param which:
+        :return: sum of segment of indices for each size
+        '''
+        if which == SMA:
+            return sum(self.flags[0:9])
+        elif which == MED:
+            return sum(self.flags[9:18])
+        elif which == BIG:
+            return sum(self.flags[18:27])
+
+    def num_remaining(self, which):
+        '''
+        Track the number of pieces of each size remaining
+        :param which:
+        :return: number of remaining pieces of each size
+        '''
+        return (3 - self.num_played(which))
+
+    def remaining_pieces(self):
+        '''
+        Track pieces remaining in hand after placing a piece on the board
+        :return: Updated list of pieces
+        '''
+        #sum_array = np.array(self.flags)
+        smalls_remaining = self.num_remaining(SMA)
+        meds_remaining = self.num_remaining(MED)
+        bigs_remaining = self.num_remaining(BIG)
+        return (smalls_remaining, meds_remaining, bigs_remaining)
 
     def draw(self, board):
         '''
@@ -157,6 +189,14 @@ if __name__ == '__main__':
 
     p.place(SMA, 4)
     p.place(SMA, 8)
+    should_be_True = p.piece_size_remaining(SMA)
+    p.place(SMA, 6)
+    numplay_test = p.num_played(SMA)
+    should_be_False = p.piece_size_remaining(SMA)
+    rem_pieces = p.remaining_pieces()
+    #test = np.array(p.flags)
+    #test_s = test[0:9]
+    #nptest = test_s.sum()
     full1 = p.has_all_pieces([4])
     full2 = p.has_all_pieces([4,8])
     full3 = p.has_all_pieces([2])
@@ -170,6 +210,7 @@ if __name__ == '__main__':
     p.place(BIG, 2)
     p.place(index=24)
     p.place(index=12)
+    should_be_False2 = p.piece_size_remaining(BIG)
     winner = p.has_a_win()
     winners = p.all_wins()
     should_be_one = len(winners)

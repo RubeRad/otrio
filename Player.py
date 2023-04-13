@@ -101,14 +101,17 @@ class Player:
                 which, where = self.convert_to_wh(index)
                 board.draw_piece(which, self.color, where)
 
-    def has_pieces(self, indices):
+    def has_all_pieces(self, indices):
         '''
         Go through a list of indices (probably one of the winning 3-tuples)
         and check if all of the flags at those indices are True (pieces are placed there)
         :param indices:
         :return: True if all the indices are played, False if any are not
         '''
-        return False
+        for i in indices:
+            if self.flags[i] == False:
+                return False
+        return True
 
     def has_a_win(self):
         '''
@@ -116,6 +119,9 @@ class Player:
         that tuple and stop searching. Otherwise return False
         :return: the 3-tuple of winning indices, or False
         '''
+        for trip in self.wintrips:
+            if self.has_all_pieces(trip):
+                return trip
         return False
 
     def all_wins(self):
@@ -147,6 +153,10 @@ if __name__ == '__main__':
 
     p.place(SMA, 4)
     p.place(SMA, 8)
+    full1 = p.has_all_pieces([4])
+    full2 = p.has_all_pieces([4,8])
+    full3 = p.has_all_pieces([2])
+    full4 = p.has_all_pieces([4+9,8+9])
     should_be_false = p.has_a_win()
     p.place(SMA, 2)
     p.place(SMA, 0)

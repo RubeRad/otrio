@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 from OtrioArtist import *
 from Player import *
@@ -19,8 +20,19 @@ class Game:
         return False
 
 
-
 if __name__ == '__main__':
     g = Game()
+    board = OtrioArtist()
+
+    for i in range(26):
+        g.player[i%4].place(index=random.randint(0,26))
+        g.player[i%4].draw(board)
+
+    for i in range(4):
+        if g.player[i].has_a_win():
+            print('Player {} wins!'.format(i))
+            print(g.player[i].all_wins())
+
+    board.im_save('gs2_test.png')
 
 

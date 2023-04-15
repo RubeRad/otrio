@@ -17,21 +17,84 @@ class Game:
         Rotate from active player to next player in order
         :return:
         '''
+        # ...
         return False
+
+    def open_spots(self):
+        '''
+        Ask each player where all their pieces are and return a list
+        of all open piece positions
+        :return: list of 0-27 indices with no pieces
+        '''
+        indices = list(range(27))
+        # ...
+        return indices
+
+    def legal_moves(self, player):
+        '''
+        For the specified player index, start with self.open_spots(),
+        and narrow down based on what pieces the player has left
+        :param player:
+        :return: list of 0-27 indices that player can legally play
+        '''
+        indices = self.open_spots()
+        #...
+        return indices
+
+    def winning_next_moves(self, player):
+        '''
+        For the specified player index, start from self.legal_moves(), and check
+        if any of them would result in a win if played. Can be used for finding a
+        winning move for the current player, or finding spots that need to be
+        blocked for subsequent players
+        :param player:
+        :return: list of 0-27 indices that would give player a win
+        '''
+        indices = []
+        #indices = self.legal_moves(player)
+        # ...
+        return indices
+
 
 
 if __name__ == '__main__':
     g = Game()
     board = OtrioArtist()
 
-    for i in range(26):
-        g.player[i%4].place(index=random.randint(0,26))
-        g.player[i%4].draw(board)
+    for move in range(27): # 27 spots, max 27 moves
+        # maybe we never even need to rotate?
+        p = move % 4
 
-    for i in range(4):
-        if g.player[i].has_a_win():
-            print('Player {} wins!'.format(i))
-            print(g.player[i].all_wins())
+        # win if you can
+        wins = g.winning_next_moves(p)
+        if wins: # empty list evaluates as False
+            g.player[p].place(index=wins[0])
+            print('Player {} wins!'.format(p))
+            break # game over!
+
+        # block if you must
+        blocks = g.winning_next_moves( (p+1)%4 )
+        if blocks:
+            g.player[p].place(index=blocks[0])
+
+        # otherwise random
+        spots = g.open_spots()
+        spot = np.random.choice(spots)
+        g.player[p].place(index=spot)
+
+        # wherever they played, draw the updated board
+        g.player[p].draw(board)
+
+
+        # this part should be able to go away
+        done = False
+        for i, playa in enumerate(g.player):
+            if playa.has_a_win():
+                done = True
+                print('Player {} wins!'.format(i))
+                print(playa.all_wins())
+        if done:
+            break
 
     board.im_save('gs2_test.png')
 

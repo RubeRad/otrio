@@ -46,6 +46,9 @@ class OtrioArtist:
         self.thick = [0,-5,7,7]
         self.new_board()
 
+        # VideoWriter for animating successive board states as a video
+        self.writer = None
+
     def draw_donut(self, xy, r, t, c):
         '''
         Draw a playing piece on the board as a donut (thicc circle)
@@ -57,16 +60,19 @@ class OtrioArtist:
         '''
         cv2.circle(self.img, xy, r, c, t) # note c/t switched order
 
-    def draw_piece(self, which, color, where):
+    def draw_piece(self, which, color, where, add_frame=False):
         '''
         Draw a donut to indicate a piece being played
         :param which: Which size of piece? SMA,MED,BIG
         :param color: One of the player colors
         :param where: Position 0-8
+        :param add_frame: whether to add the board state to a video in progress
         :return: None
         '''
         self.draw_donut(self.centers[where], self.radii[which],
                         self.thick[which], color)
+        if add_frame:
+            self.add_frame()
 
 
     def new_board(self):
@@ -87,16 +93,38 @@ class OtrioArtist:
         '''
         cv2.imwrite(fname, self.img)
 
+    def start_video(self, fname, hertz=1):
+        '''
+        Start a new video file for animating a game (sequence of boards)
+        :param fname: filename for the video, probably something.avi
+        :param hertz: frames-per-second play rate
+        :return: None
+        '''
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        w_h = (self.ncols, self.nrows)
+        self.writer = cv2.VideoWriter(fname, fourcc, hertz, w_h)
+
+    def add_frame(self):
+        '''
+        Add the current board image as a frame to the video
+        :return: None
+        '''
+        if self.writer is not None:
+            self.writer.write(self.img)
+
+
 
 if __name__ == '__main__':
     colors = [RED, GRN, BLU, YLW, REDl, GRNl, BLUl, YLWl]
     board = OtrioArtist()
 
     board.new_board()
-    board.draw_piece(MED, RED, 4)
-    board.draw_piece(SMA, BLU, 0)
-    board.draw_piece(BIG, YLW, 7)
-    board.draw_piece(SMA, GRN, 4)
+    board.start_video('otrio.avi')
+    board.add_frame()
+    board.draw_piece(MED, RED, 4, True)
+    board.draw_piece(SMA, BLU, 0, True)
+    board.draw_piece(BIG, YLW, 7, True)
+    board.draw_piece(SMA, GRN, 4, True)
     board.im_save('donuts.png')
 
 

@@ -26,8 +26,16 @@ class Game:
         of all open piece positions
         :return: list of 0-27 indices with no pieces
         '''
-        indices = list(range(27))
-        # ...
+        indices = []
+        b_array = np.array(self.player[0].flags) | \
+                  np.array(self.player[1].flags) | \
+                  np.array(self.player[2].flags) | \
+                  np.array(self.player[3].flags)
+
+        for i in range(len(b_array)):
+            if b_array[i] == False:
+                indices.append(i)
+
         return indices
 
     def legal_moves(self, player):
@@ -60,6 +68,13 @@ class Game:
 if __name__ == '__main__':
     g = Game()
     board = OtrioArtist()
+
+    '''
+    for p in g.player:
+        p.place(index=random.randint(0,26))
+        open_spots = g.open_spots()
+    '''
+
 
     for move in range(27): # 27 spots, max 27 moves
         # maybe we never even need to rotate?
@@ -97,5 +112,4 @@ if __name__ == '__main__':
             break
 
     board.im_save('gs2_test.png')
-
 

@@ -133,6 +133,11 @@ class Player:
             if self.flags[index]:
                 which, where = self.convert_to_wh(index)
                 board.draw_piece(which, self.color, where)
+            if self.all_wins():
+                for trip in self.all_wins():
+                    for index in trip:
+                        which, where = self.convert_to_wh(index)
+                        board.draw_piece(which, self.bright, where)
 
 
     def has_all_pieces(self, indices):

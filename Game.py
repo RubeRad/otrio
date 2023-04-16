@@ -10,7 +10,10 @@ class Game:
         A game has 4 players - it tracks the pieces each player has placed
         and rotates between the players.
         '''
-        self.player = [Player(REDl), Player(BLUl), Player(YLWl), Player(GRNl)]
+        self.player = [Player(REDl, RED),
+                       Player(BLUl, BLU),
+                       Player(YLWl, YLW),
+                       Player(GRNl, GRN)]
 
     def rotate_player(self):
         '''
@@ -104,7 +107,12 @@ if __name__ == '__main__':
         wins = g.winning_next_moves(p)
         if wins: # empty list evaluates as False
             g.player[p].place(index=wins[0])
+            highlight = g.player[p].all_wins()
             g.player[p].draw(board)
+            for trip in highlight:
+                for index in trip:
+                    which, where = g.player[p].convert_to_wh(index)
+                    board.draw_piece(which,g.player[p].bright,where)
             print('Player {} wins!'.format(p))
             break # game over!
 
@@ -114,8 +122,9 @@ if __name__ == '__main__':
         if blocks and blocks[0] in legal:
             g.player[p].place(index=blocks[0])
         else: # otherwise random
-            spot = np.random.choice(legal)
-            g.player[p].place(index=spot)
+            if legal:
+                spot = np.random.choice(legal)
+                g.player[p].place(index=spot)
 
         # wherever they played, draw the updated board
         g.player[p].draw(board)

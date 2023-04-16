@@ -10,7 +10,7 @@ class Game:
         A game has 4 players - it tracks the pieces each player has placed
         and rotates between the players.
         '''
-        self.player = [Player(RED), Player(BLU), Player(YLW), Player(GRN)]
+        self.player = [Player(REDl), Player(BLUl), Player(YLWl), Player(GRNl)]
 
     def rotate_player(self):
         '''
@@ -68,8 +68,13 @@ class Game:
         :return: list of 0-27 indices that would give player a win
         '''
         indices = []
-        #indices = self.legal_moves(player)
-        # ...
+
+        for i in self.legal_moves(player):
+            self.player[player].place(index=i)
+            if self.player[player].has_a_win():
+                indices.append(i)
+            self.player[player].remove(index=i)
+
         return indices
 
 
@@ -77,12 +82,18 @@ class Game:
 if __name__ == '__main__':
     g = Game()
     board = OtrioArtist()
+    #board.im_save('move.png')
 
     '''
-    for p in g.player:
-        p.place(index=random.randint(0,26))
-        open_spots = g.open_spots()
+    g.player[0].place(SMA, 0)
+    g.player[0].place(MED, 4)
+    test1 = g.winning_next_moves(0)
+    g.player[0].place(BIG, 2)
+    test2 = g.winning_next_moves(0)
     '''
+
+
+
 
 
     for move in range(27): # 27 spots, max 27 moves
@@ -93,32 +104,22 @@ if __name__ == '__main__':
         wins = g.winning_next_moves(p)
         if wins: # empty list evaluates as False
             g.player[p].place(index=wins[0])
+            g.player[p].draw(board)
             print('Player {} wins!'.format(p))
             break # game over!
 
         # block if you must
         blocks = g.winning_next_moves( (p+1)%4 )
-        if blocks:
+        legal = g.legal_moves(p)
+        if blocks and blocks[0] in legal:
             g.player[p].place(index=blocks[0])
-
-        # otherwise random
-        spots = g.legal_moves(p)
-        spot = np.random.choice(spots)
-        g.player[p].place(index=spot)
+        else: # otherwise random
+            spot = np.random.choice(legal)
+            g.player[p].place(index=spot)
 
         # wherever they played, draw the updated board
         g.player[p].draw(board)
+        #board.im_save('move.png')
 
-
-        # this part should be able to go away
-        done = False
-        for i, playa in enumerate(g.player):
-            if playa.has_a_win():
-                done = True
-                print('Player {} wins!'.format(i))
-                print(playa.all_wins())
-        if done:
-            break
-
-    board.im_save('gs2_test.png')
+    board.im_save('win.png')
 

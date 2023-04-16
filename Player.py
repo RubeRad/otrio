@@ -39,13 +39,14 @@ def all_winning_triples():
     return win_trip
 
 class Player:
-    def __init__(self, c):
+    def __init__(self, c, bc):
         '''
         A Player knows what color his pieces are, and
         holds an array of 27 flags for whether pieces are placed
         :param c: What color is this player's pieces?
         '''
         self.color = c                         # what color am I
+        self.bright = bc                       # all_wins highlighted by bright color
         self.flags = [False]*27                # No pieces played to start
         self.wintrips = all_winning_triples()  # know where the wins are
 
@@ -133,6 +134,7 @@ class Player:
                 which, where = self.convert_to_wh(index)
                 board.draw_piece(which, self.color, where)
 
+
     def has_all_pieces(self, indices):
         '''
         Go through a list of indices (probably one of the winning 3-tuples)
@@ -171,7 +173,7 @@ class Player:
 
 
 if __name__ == '__main__':
-    p = Player(RED)
+    p = Player(RED, REDl)
 
 
     #Generate images to check all winning triplets

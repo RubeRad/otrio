@@ -45,8 +45,17 @@ class Game:
         :param player:
         :return: list of 0-27 indices that player can legally play
         '''
-        indices = self.open_spots()
-        #...
+        indices = []
+        s_p, m_p, b_p = self.player[player].remaining_pieces()
+
+        for i in self.open_spots():
+            if i < 9 and s_p > 0:
+                indices.append(i)
+            elif i < 18 and m_p > 0:
+                indices.append(i)
+            elif b_p > 0:
+                indices.append(i)
+
         return indices
 
     def winning_next_moves(self, player):
@@ -93,7 +102,7 @@ if __name__ == '__main__':
             g.player[p].place(index=blocks[0])
 
         # otherwise random
-        spots = g.open_spots()
+        spots = g.legal_moves(p)
         spot = np.random.choice(spots)
         g.player[p].place(index=spot)
 

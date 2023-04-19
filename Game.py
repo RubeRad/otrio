@@ -41,6 +41,14 @@ class Game:
 
         return indices
 
+    def full_board(self):
+        '''
+        All spaces in the board are filled.
+        :return:
+        '''
+        if len(self.open_spots()) == 0:
+            return True
+
     def legal_moves(self, player):
         '''
         For the specified player index, start with self.open_spots(),
@@ -98,7 +106,8 @@ if __name__ == '__main__':
 
 
 
-
+    #for i in range(0,10):
+        #board.new_board()
     for move in range(27): # 27 spots, max 27 moves
         # maybe we never even need to rotate?
         p = move % 4
@@ -114,6 +123,7 @@ if __name__ == '__main__':
                     which, where = g.player[p].convert_to_wh(index)
                     board.draw_piece(which,g.player[p].bright,where)
             print('Player {} wins!'.format(p))
+            board.im_save('win.png')
             break # game over!
 
         # block if you must
@@ -130,5 +140,8 @@ if __name__ == '__main__':
         g.player[p].draw(board)
         #board.im_save('move.png')
 
-    board.im_save('win.png')
+        #save image of tie
+        if g.full_board():
+            board.im_save('tie.png')
+
 

@@ -5,7 +5,7 @@ from OtrioArtist import *
 from Player import *
 
 class Game:
-    def __init__(self):
+    def __init__(self) -> object:
         '''
         A game has 4 players - it tracks the pieces each player has placed
         and rotates between the players.
@@ -14,6 +14,7 @@ class Game:
                        Player(BLUl, BLU),
                        Player(YLWl, YLW),
                        Player(GRNl, GRN)]
+        self.board = OtrioArtist()
 
     def rotate_player(self):
         '''
@@ -46,8 +47,7 @@ class Game:
         All spaces in the board are filled.
         :return:
         '''
-        if len(self.open_spots()) == 0:
-            return True
+        return (len(self.open_spots()) == 0)
 
     def legal_moves(self, player):
         '''
@@ -91,57 +91,47 @@ class Game:
 
 
 if __name__ == '__main__':
-    g = Game()
-    board = OtrioArtist()
-    #board.im_save('move.png')
-
-    '''
-    g.player[0].place(SMA, 0)
-    g.player[0].place(MED, 4)
-    test1 = g.winning_next_moves(0)
-    g.player[0].place(BIG, 2)
-    test2 = g.winning_next_moves(0)
-    '''
 
 
+    for i in range(10):
+        g = Game()
 
+        for move in range(27): # 27 spots, max 27 moves
+            # maybe we never even need to rotate?
+            p = move % 4
 
-    #for i in range(0,10):
-        #board.new_board()
-    for move in range(27): # 27 spots, max 27 moves
-        # maybe we never even need to rotate?
-        p = move % 4
+            # win if you can
+            wins = g.winning_next_moves(p)
+            if wins: # empty list evaluates as False
+                g.player[p].place(index=wins[0])
+                highlight = g.player[p].all_wins()
+                g.player[p].draw(g.board)
+                for trip in highlight:
+                    for index in trip:
+                        which, where = g.player[p].convert_to_wh(index)
+                        g.board.draw_piece(which,g.player[p].bright,where)
+                print('Player {} wins!'.format(p))
+                g.board.im_save('Wins/game{}_win.png'.format(i))
+                break # game over!
 
-        # win if you can
-        wins = g.winning_next_moves(p)
-        if wins: # empty list evaluates as False
-            g.player[p].place(index=wins[0])
-            highlight = g.player[p].all_wins()
-            g.player[p].draw(board)
-            for trip in highlight:
-                for index in trip:
-                    which, where = g.player[p].convert_to_wh(index)
-                    board.draw_piece(which,g.player[p].bright,where)
-            print('Player {} wins!'.format(p))
-            board.im_save('win.png')
-            break # game over!
+            # block if you must
+            blocks = g.winning_next_moves( (p+1)%4 )
+            legal = g.legal_moves(p)
+            if blocks and blocks[0] in legal:
+                g.player[p].place(index=blocks[0])
+            else: # otherwise random
+                if legal:
+                    spot = np.random.choice(legal)
+                    g.player[p].place(index=spot)
 
-        # block if you must
-        blocks = g.winning_next_moves( (p+1)%4 )
-        legal = g.legal_moves(p)
-        if blocks and blocks[0] in legal:
-            g.player[p].place(index=blocks[0])
-        else: # otherwise random
-            if legal:
-                spot = np.random.choice(legal)
-                g.player[p].place(index=spot)
+            # wherever they played, draw the updated board
+            g.player[p].draw(g.board)
 
-        # wherever they played, draw the updated board
-        g.player[p].draw(board)
-        #board.im_save('move.png')
-
-        #save image of tie
-        if g.full_board():
-            board.im_save('tie.png')
+            #save image of tie and remove all pieces after game
+            if g.full_board():
+                g.board.im_save('Ties/game{}_tie.png'.format(i))
+                print('No wins here.')
+                #for index in range(len(g.player[p].flags)):
+                    #g.player[p].remove(index=index)
 
 

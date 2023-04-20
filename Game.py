@@ -88,42 +88,47 @@ class Game:
 
         return indices
 
-'''
-    def single_move(self, p):
-       
 
+    def single_move(self, p):
+        '''
+        Method to define a single move. If the move wins the game, the method returns a list of all
+        winning triples. If the move does not win the game, it returns an empty list.
+        :param p:
+        :return: list of winning triples OR empty list
+        '''
         # win if you can
-        wins = g.winning_next_moves(p)
+        wins = self.winning_next_moves(p)
         if wins:  # empty list evaluates as False
-            g.player[p].place(index=wins[0])
-            highlight = g.player[p].all_wins()
-            g.player[p].draw(g.board)
+            self.player[p].place(index=wins[0])
+            highlight = self.player[p].all_wins()
+            self.player[p].draw(self.board)
             for trip in highlight:
                 for index in trip:
-                    which, where = g.player[p].convert_to_wh(index)
-                    g.board.draw_piece(which, g.player[p].bright, where)
-            print('Player {} wins!'.format(p))
-            g.board.im_save('Wins/game{}_win.png'.format(i))
-            break  # game over!
+                    which, where = self.player[p].convert_to_wh(index)
+                    self.board.draw_piece(which, self.player[p].bright, where)
+
+            #self.board.im_save('Wins/game{}_win.png'.format(i))
+            return highlight #game over
 
         # block if you must
-        blocks = g.winning_next_moves((p + 1) % 4)
-        legal = g.legal_moves(p)
+        blocks = self.winning_next_moves((p + 1) % 4)
+        legal = self.legal_moves(p)
         if blocks and blocks[0] in legal:
-            g.player[p].place(index=blocks[0])
+            self.player[p].place(index=blocks[0])
         else:  # otherwise random
             if legal:
                 spot = np.random.choice(legal)
-                g.player[p].place(index=spot)
+                self.player[p].place(index=spot)
 
         # wherever they played, draw the updated board
-        g.player[p].draw(g.board)
+        self.player[p].draw(self.board)
 
         # save image of tie and remove all pieces after game
-        if g.full_board():
-            g.board.im_save('Ties/game{}_tie.png'.format(i))
-            print('No wins here.')
-'''
+        #if self.full_board():
+            #self.board.im_save('Ties/game{}_tie.png'.format(i))
+        return []
+            #print('No wins here.')
+
 
 if __name__ == '__main__':
 
@@ -135,6 +140,18 @@ if __name__ == '__main__':
             # maybe we never even need to rotate?
             p = move % 4
 
+            #win if you can
+            winning_triples = g.single_move(p)
+            if winning_triples != []:
+                g.board.im_save('Wins/game{}.png'.format(i))
+                print('Game {}: Player {} wins with {}!'.format(i,p,winning_triples))
+                break
+            elif g.full_board():
+                g.board.im_save('Ties/game{}.png'.format(i))
+                print('Game {}: No wins here.'.format(i))
+                break
+
+'''
             # win if you can
             wins = g.winning_next_moves(p)
             if wins: # empty list evaluates as False
@@ -169,4 +186,5 @@ if __name__ == '__main__':
                 #for index in range(len(g.player[p].flags)):
                     #g.player[p].remove(index=index)
 
+'''
 

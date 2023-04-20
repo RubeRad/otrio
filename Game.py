@@ -49,15 +49,15 @@ class Game:
         '''
         return (len(self.open_spots()) == 0)
 
-    def legal_moves(self, player):
+    def legal_moves(self, p):
         '''
         For the specified player index, start with self.open_spots(),
         and narrow down based on what pieces the player has left
-        :param player:
+        :param p: Player number
         :return: list of 0-27 indices that player can legally play
         '''
         indices = []
-        s_p, m_p, b_p = self.player[player].remaining_pieces()
+        s_p, m_p, b_p = self.player[p].remaining_pieces()
 
         for i in self.open_spots():
             if i < 9 and s_p > 0:
@@ -69,26 +69,61 @@ class Game:
 
         return indices
 
-    def winning_next_moves(self, player):
+    def winning_next_moves(self, p):
         '''
         For the specified player index, start from self.legal_moves(), and check
         if any of them would result in a win if played. Can be used for finding a
         winning move for the current player, or finding spots that need to be
         blocked for subsequent players
-        :param player:
+        :param p: Player number
         :return: list of 0-27 indices that would give player a win
         '''
         indices = []
 
-        for i in self.legal_moves(player):
-            self.player[player].place(index=i)
-            if self.player[player].has_a_win():
+        for i in self.legal_moves(p):
+            self.player[p].place(index=i)
+            if self.player[p].has_a_win():
                 indices.append(i)
-            self.player[player].remove(index=i)
+            self.player[p].remove(index=i)
 
         return indices
 
+'''
+    def single_move(self, p):
+       
 
+        # win if you can
+        wins = g.winning_next_moves(p)
+        if wins:  # empty list evaluates as False
+            g.player[p].place(index=wins[0])
+            highlight = g.player[p].all_wins()
+            g.player[p].draw(g.board)
+            for trip in highlight:
+                for index in trip:
+                    which, where = g.player[p].convert_to_wh(index)
+                    g.board.draw_piece(which, g.player[p].bright, where)
+            print('Player {} wins!'.format(p))
+            g.board.im_save('Wins/game{}_win.png'.format(i))
+            break  # game over!
+
+        # block if you must
+        blocks = g.winning_next_moves((p + 1) % 4)
+        legal = g.legal_moves(p)
+        if blocks and blocks[0] in legal:
+            g.player[p].place(index=blocks[0])
+        else:  # otherwise random
+            if legal:
+                spot = np.random.choice(legal)
+                g.player[p].place(index=spot)
+
+        # wherever they played, draw the updated board
+        g.player[p].draw(g.board)
+
+        # save image of tie and remove all pieces after game
+        if g.full_board():
+            g.board.im_save('Ties/game{}_tie.png'.format(i))
+            print('No wins here.')
+'''
 
 if __name__ == '__main__':
 

@@ -129,17 +129,39 @@ class Game:
         return []
             #print('No wins here.')
 
+    #def finish_game(self):
+        #for move in range(27):
+            #p = move % 4
+            #self.single_move(p)
+
 
 if __name__ == '__main__':
 
 
     for i in range(10):
         g = Game()
+        move = 0
 
-        for move in range(27): # 27 spots, max 27 moves
-            # maybe we never even need to rotate?
+        while move < 27:
             p = move % 4
-            g.single_move(p)
+            output = g.single_move(p)
+            if output:
+                print(p, output)
+                break
+            else:
+                move += 1
+                continue
+        else:
+            print('Tie after full board.')
+
+
+
+
+        #for move in range(27): # 27 spots, max 27 moves
+            # maybe we never even need to rotate?
+            #p = move % 4
+            #output = g.single_move(p)
+        #print(output)
 
 
 

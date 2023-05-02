@@ -139,17 +139,9 @@ if __name__ == '__main__':
         for move in range(27): # 27 spots, max 27 moves
             # maybe we never even need to rotate?
             p = move % 4
+            g.single_move(p)
 
-            #win if you can
-            winning_triples = g.single_move(p)
-            if winning_triples != []:
-                g.board.im_save('Wins/game{}.png'.format(i))
-                print('Game {}: Player {} wins with {}!'.format(i,p,winning_triples))
-                break
-            elif g.full_board():
-                g.board.im_save('Ties/game{}.png'.format(i))
-                print('Game {}: No wins here.'.format(i))
-                break
+
 
 '''
             # win if you can

@@ -4,6 +4,7 @@ import random
 from OtrioArtist import *
 from Player import *
 
+
 class Game:
     def __init__(self) -> object:
         '''
@@ -88,7 +89,6 @@ class Game:
 
         return indices
 
-
     def single_move(self, p):
         '''
         Method to define a single move. If the move wins the game, the method returns a list of all
@@ -96,10 +96,13 @@ class Game:
         :param p:
         :return: list of winning triples OR empty list
         '''
-        # win if you can
+        spot = None
+
+        #WIN
         wins = self.winning_next_moves(p)
         if wins:  # empty list evaluates as False
-            self.player[p].place(index=wins[0])
+            spot = int(wins[0])
+            self.player[p].place(index=spot)
             highlight = self.player[p].all_wins()
             self.player[p].draw(self.board)
             for trip in highlight:
@@ -107,123 +110,63 @@ class Game:
                     which, where = self.player[p].convert_to_wh(index)
                     self.board.draw_piece(which, self.player[p].bright, where)
 
-            #self.board.im_save('Wins/game{}_win.png'.format(i))
-            return highlight #game over
+            # self.board.im_save('Wins/game{}_win.png'.format(i))
+            return spot  # game over
 
-        # block if you must
-        blocks = self.winning_next_moves((p + 1) % 4)
+        #NO MOVES
         legal = self.legal_moves(p)
-        
+        if legal == []:
+            return None
+
+        #BLOCK
+        blocks = self.winning_next_moves((p + 1) % 4)
         if blocks and blocks[0] in legal:
-            self.player[p].place(index=blocks[0])
+            spot = int(blocks[0])
+            self.player[p].place(index=spot)
+
+        #RANDOM
         else:  # otherwise random
-            if legal:
-                spot = np.random.choice(legal)
-                self.player[p].place(index=spot)
-            else:
-                print('Player ' + str(p) + ' cannot place piece')
-                self.board.im_save('No_Legal_Moves/skip.png')
+            spot = int(np.random.choice(legal))
+            self.player[p].place(index=spot)
 
         # wherever they played, draw the updated board
-        self.player[p].draw(self.board)
+        which, where = self.player[p].convert_to_wh(spot)
+        self.board.draw_piece(which, self.player[p].color, where)
 
         # save image of tie and remove all pieces after game
-        #if self.full_board():
-            #self.board.im_save('Ties/game{}_tie.png'.format(i))
-        return []
-            #print('No wins here.')
+        # if self.full_board():
+        # self.board.im_save('Ties/game{}_tie.png'.format(i))
+        return spot
+        # print('No wins here.')
 
     def play_game(self):
         '''
         Method to play game to win OR to full board
         :return: Player index OR 4 (to indicate tie)
         '''
-        move = 0
-        while move < 27:
-            p = move % 4
-            output = g.single_move(p)
-            if output:
-                return p
-            else:
-                move += 1
-                continue
-        else:
-            return 4
+        p = 0
+        while not self.full_board():
+            g.single_move(p)
 
-    #def finish_game(self):
-        #for move in range(27):
-            #p = move % 4
-            #self.single_move(p)
+            if g.player[p].has_a_win():
+                return p
+
+            p = (p + 1) % 4
+
+        #Board is full
+        return 4
+
+    # def finish_game(self):
+    # for move in range(27):
+    # p = move % 4
+    # self.single_move(p)
 
 
 if __name__ == '__main__':
 
-
-    for i in range(1000):
+    for i in range(5):
         g = Game()
         output = g.play_game()
-        print(output)
+        print(i+1, output)
 
-
-        #move = 0
-
-        #while move < 27:
-            #p = move % 4
-            #output = g.single_move(p)
-            #if output:
-                #print(p, output)
-                #break
-            #else:
-                #move += 1
-                #continue
-        #else:
-            #print('Tie after full board.')
-        
-
-
-
-        #for move in range(27): # 27 spots, max 27 moves
-            # maybe we never even need to rotate?
-            #p = move % 4
-            #output = g.single_move(p)
-        #print(output)
-
-
-
-'''
-            # win if you can
-            wins = g.winning_next_moves(p)
-            if wins: # empty list evaluates as False
-                g.player[p].place(index=wins[0])
-                highlight = g.player[p].all_wins()
-                g.player[p].draw(g.board)
-                for trip in highlight:
-                    for index in trip:
-                        which, where = g.player[p].convert_to_wh(index)
-                        g.board.draw_piece(which,g.player[p].bright,where)
-                print('Player {} wins!'.format(p))
-                g.board.im_save('Wins/game{}_win.png'.format(i))
-                break # game over!
-
-            # block if you must
-            blocks = g.winning_next_moves( (p+1)%4 )
-            legal = g.legal_moves(p)
-            if blocks and blocks[0] in legal:
-                g.player[p].place(index=blocks[0])
-            else: # otherwise random
-                if legal:
-                    spot = np.random.choice(legal)
-                    g.player[p].place(index=spot)
-
-            # wherever they played, draw the updated board
-            g.player[p].draw(g.board)
-
-            #save image of tie and remove all pieces after game
-            if g.full_board():
-                g.board.im_save('Ties/game{}_tie.png'.format(i))
-                print('No wins here.')
-                #for index in range(len(g.player[p].flags)):
-                    #g.player[p].remove(index=index)
-
-'''
-
+      

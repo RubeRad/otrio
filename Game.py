@@ -15,7 +15,7 @@ class Game:
                        Player(BLUl, BLU),
                        Player(YLWl, YLW),
                        Player(GRNl, GRN)]
-        self.board = OtrioArtist()
+        #self.board = OtrioArtist()
 
     def rotate_player(self):
         '''
@@ -103,12 +103,12 @@ class Game:
         if wins:  # empty list evaluates as False
             spot = int(wins[0])
             self.player[p].place(index=spot)
-            highlight = self.player[p].all_wins()
-            self.player[p].draw(self.board)
-            for trip in highlight:
-                for index in trip:
-                    which, where = self.player[p].convert_to_wh(index)
-                    self.board.draw_piece(which, self.player[p].bright, where)
+            #highlight = self.player[p].all_wins()
+            #self.player[p].draw(self.board)
+            #for trip in highlight:
+                #for index in trip:
+                    #which, where = self.player[p].convert_to_wh(index)
+                    #self.board.draw_piece(which, self.player[p].bright, where)
 
             # self.board.im_save('Wins/game{}_win.png'.format(i))
             return spot  # game over
@@ -130,8 +130,8 @@ class Game:
             self.player[p].place(index=spot)
 
         # wherever they played, draw the updated board
-        which, where = self.player[p].convert_to_wh(spot)
-        self.board.draw_piece(which, self.player[p].color, where)
+        #which, where = self.player[p].convert_to_wh(spot)
+        #self.board.draw_piece(which, self.player[p].color, where)
 
         # save image of tie and remove all pieces after game
         # if self.full_board():

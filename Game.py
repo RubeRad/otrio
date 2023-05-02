@@ -113,12 +113,16 @@ class Game:
         # block if you must
         blocks = self.winning_next_moves((p + 1) % 4)
         legal = self.legal_moves(p)
+        
         if blocks and blocks[0] in legal:
             self.player[p].place(index=blocks[0])
         else:  # otherwise random
             if legal:
                 spot = np.random.choice(legal)
                 self.player[p].place(index=spot)
+            else:
+                print('Player ' + str(p) + ' cannot place piece')
+                self.board.im_save('No_Legal_Moves/skip.png')
 
         # wherever they played, draw the updated board
         self.player[p].draw(self.board)
@@ -129,6 +133,23 @@ class Game:
         return []
             #print('No wins here.')
 
+    def play_game(self):
+        '''
+        Method to play game to win OR to full board
+        :return: Player index OR 4 (to indicate tie)
+        '''
+        move = 0
+        while move < 27:
+            p = move % 4
+            output = g.single_move(p)
+            if output:
+                return p
+            else:
+                move += 1
+                continue
+        else:
+            return 4
+
     #def finish_game(self):
         #for move in range(27):
             #p = move % 4
@@ -138,22 +159,26 @@ class Game:
 if __name__ == '__main__':
 
 
-    for i in range(10):
+    for i in range(1000):
         g = Game()
-        move = 0
+        output = g.play_game()
+        print(output)
 
-        while move < 27:
-            p = move % 4
-            output = g.single_move(p)
-            if output:
-                print(p, output)
-                break
-            else:
-                move += 1
-                continue
-        else:
-            print('Tie after full board.')
 
+        #move = 0
+
+        #while move < 27:
+            #p = move % 4
+            #output = g.single_move(p)
+            #if output:
+                #print(p, output)
+                #break
+            #else:
+                #move += 1
+                #continue
+        #else:
+            #print('Tie after full board.')
+        
 
 
 

@@ -146,9 +146,9 @@ class Game:
         '''
         p = 0
         while not self.full_board():
-            g.single_move(p)
+            self.single_move(p)
 
-            if g.player[p].has_a_win():
+            if self.player[p].has_a_win():
                 return p
 
             p = (p + 1) % 4
@@ -169,4 +169,4 @@ if __name__ == '__main__':
         output = g.play_game()
         print(i+1, output)
 
-      
+

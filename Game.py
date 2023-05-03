@@ -139,7 +139,7 @@ class Game:
         return spot
         # print('No wins here.')
 
-    def play_game(self):
+    def play_game(self, next_player=None):
         '''
         Method to play game to win OR to full board
         :return: Player index OR 4 (to indicate tie)

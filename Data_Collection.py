@@ -19,36 +19,33 @@ from Game import *
 
 def record_game_results(number):
     start_time = time.time()
-    result_count = {'p0_wins': 0,
-                    'p1_wins': 0,
-                    'p2_wins': 0,
-                    'p3_wins': 0,
-                    'ties': 0}
-    #result_count = [0] * 5
+    result_count = [0] * 5
     result = []
-    k = result_count.keys()
 
     for i in range(number):
         g = Game()
         result.append(g.play_game())
 
     for r in result:
-        if r == 0:
-            result_count['p0_wins'] += 1
-        elif r == 1:
-            result_count['p1_wins'] += 1
-        elif r == 2:
-            result_count['p2_wins'] += 1
-        elif r == 3:
-            result_count['p3_wins'] += 1
-        else:
-            result_count['ties'] += 1
-
+        result_count[r] += 1
 
     end_time = time.time()
     run_time = end_time - start_time
     return result_count, run_time
 
-game_results, run_time = record_game_results(10000)
+game_results, run_time = record_game_results(100)
+
+'''
+headers = ['p0', 'p1', 'p2', 'p3', 'ties']
+with open('Otrio_Stats_TEST.csv', 'w') as f:
+    for item in headers:
+        str_val_h = headers[item].join(',')
+    for item in game_results:
+        str_val_d = game_results[item].join(',')
+
+    f.write(str_val_h)
+    f.write(str_val_d)
+    f.close()
+'''
 print(game_results, float(run_time))
 

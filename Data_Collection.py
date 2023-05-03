@@ -20,6 +20,7 @@ from Game import *
 def record_game_results(number):
     start_time = time.time()
     result_count = [0] * 5
+    str_result_count = [0] * 5
     result = []
 
     for i in range(number):
@@ -29,23 +30,22 @@ def record_game_results(number):
     for r in result:
         result_count[r] += 1
 
+    for i in range(len(result_count)):
+        str_result_count[i] = (str(result_count[i]))
+
     end_time = time.time()
     run_time = end_time - start_time
-    return result_count, run_time
+    return str_result_count, run_time, result_count
 
-game_results, run_time = record_game_results(100)
+str_game_res, run_time, int_game_res = record_game_results(10000)
 
-'''
 headers = ['p0', 'p1', 'p2', 'p3', 'ties']
 with open('Otrio_Stats_TEST.csv', 'w') as f:
-    for item in headers:
-        str_val_h = headers[item].join(',')
-    for item in game_results:
-        str_val_d = game_results[item].join(',')
-
-    f.write(str_val_h)
-    f.write(str_val_d)
+    f.write(','.join(headers))
+    f.write('\n')
+    f.write(','.join(str_game_res))
     f.close()
-'''
-print(game_results, float(run_time))
+
+print(int_game_res, float(run_time))
+
 

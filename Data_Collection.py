@@ -38,36 +38,29 @@ def record_game_results(number):
     return str_result_count, run_time, result_count
 
 def p0_start_game_results(number):
-    start_time = time.time()
-    result_count = [0] * 5
-    str_result_count = [0] * 5
-    p0_win = 0
-    p0_loss = 0
-    p0_tie = 0
-    start_index = []
+    p0_results_array = np.zeros((3,27), dtype=int)
 
     for i in range(number):
         g = Game()
         firstmove = g.single_move(0)
-        start_index.append(firstmove)
         winner = g.play_game(next_player=1)
 
         if winner == 0:
-            p0_win += 1
+            p0_results_array[0, firstmove] += 1
         elif winner == 4:
-            p0_tie += 1
+            p0_results_array[2, firstmove] += 1
         else:
-            p0_loss += 1
+            p0_results_array[1, firstmove] += 1
 
-    p0_results = list(str(p0_win))
-    p0_results.append(str(p0_loss))
-    p0_results.append(str(p0_tie))
+    return p0_results_array
 
-    return start_index, p0_results
+results_matrix = p0_start_game_results(100000)
+print(results_matrix)
+    #return start_index, p0_aggregate
     #print(p0_results)
 
-firstmove, outcome = p0_start_game_results(10)
-print(firstmove, outcome)
+#firstmove, outcome = p0_start_game_results(10)
+#print(firstmove, outcome)
 
 
 

@@ -37,34 +37,26 @@ def record_game_results(number):
     run_time = end_time - start_time
     return str_result_count, run_time, result_count
 
-def p0_start_game_results(number):
+def p0_start_whole_game_results(number, file):
     p0_results_array = np.zeros((3,27), dtype=int)
-
-    for i in range(number):
-        g = Game()
-        firstmove = g.single_move(0)
-        winner = g.play_game(next_player=1)
-
-        if winner == 0:
-            p0_results_array[0, firstmove] += 1
-        elif winner == 4:
-            p0_results_array[2, firstmove] += 1
-        else:
-            p0_results_array[1, firstmove] += 1
-
-    return p0_results_array
-
-def whole_game_csv(number,file):
     with open(file, 'w') as f:
         for i in range(number):
             g = Game()
-            winner = g.play_game()
+            firstmove = g.single_move(0)
+            winner = g.play_game(next_player=1)
+
+            if winner == 0:
+                p0_results_array[0, firstmove] += 1
+            elif winner == 4:
+                p0_results_array[2, firstmove] += 1
+            else:
+                p0_results_array[1, firstmove] += 1
+
             f.write(str(winner) + ',' + ','.join(g.move_tracker) + '\n')
-        f.close()
 
-whole_game_csv(10000,'all_moves_TEST.csv')
+    return p0_results_array
 
-#results_matrix = p0_start_game_results(100000)
+#results_matrix = p0_start_game_results(1000)
 #print(results_matrix)
 #print(sum(results_matrix[0,]))
 #print(results_matrix[0,13])
@@ -75,8 +67,10 @@ whole_game_csv(10000,'all_moves_TEST.csv')
     #return start_index, p0_a / ggregate
     #print(p0_results)
 
-#firstmove, outcome = p0_start_game_results(10)
-#print(firstmove, outcome)
+mil_games_outcome = p0_start_whole_game_results(1000000,'Otrio_Dataset.csv')
+with open('Otrio_Dataset_Matrix.csv', 'w') as f:
+    print(mil_games_outcome, file=f)
+
 
 
 

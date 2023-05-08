@@ -54,9 +54,25 @@ def p0_start_game_results(number):
 
     return p0_results_array
 
-results_matrix = p0_start_game_results(100000)
-print(results_matrix)
-    #return start_index, p0_aggregate
+def whole_game_csv(number,file):
+    with open(file, 'w') as f:
+        for i in range(number):
+            g = Game()
+            winner = g.play_game()
+            f.write(str(winner) + ',' + ','.join(g.move_tracker) + '\n')
+        f.close()
+
+whole_game_csv(10000,'all_moves_TEST.csv')
+
+#results_matrix = p0_start_game_results(100000)
+#print(results_matrix)
+#print(sum(results_matrix[0,]))
+#print(results_matrix[0,13])
+
+#mid_mid = results_matrix[0,13] / sum(results_matrix[0,])
+#mid_mid_p = mid_mid * 100
+#print(mid_mid_p)
+    #return start_index, p0_a / ggregate
     #print(p0_results)
 
 #firstmove, outcome = p0_start_game_results(10)

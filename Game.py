@@ -15,6 +15,7 @@ class Game:
                        Player(BLUl, BLU),
                        Player(YLWl, YLW),
                        Player(GRNl, GRN)]
+        self.move_tracker = []
         #self.board = OtrioArtist()
 
     def rotate_player(self):
@@ -102,6 +103,7 @@ class Game:
         wins = self.winning_next_moves(p)
         if wins:  # empty list evaluates as False
             spot = int(wins[0])
+            self.move_tracker.append(str(spot))
             self.player[p].place(index=spot)
             #highlight = self.player[p].all_wins()
             #self.player[p].draw(self.board)
@@ -116,17 +118,20 @@ class Game:
         #NO MOVES
         legal = self.legal_moves(p)
         if legal == []:
+            self.move_tracker.append('None')
             return None
 
         #BLOCK
         blocks = self.winning_next_moves((p + 1) % 4)
         if blocks and blocks[0] in legal:
             spot = int(blocks[0])
+            self.move_tracker.append(str(spot))
             self.player[p].place(index=spot)
 
         #RANDOM
         else:  # otherwise random
             spot = int(np.random.choice(legal))
+            self.move_tracker.append(str(spot))
             self.player[p].place(index=spot)
 
         # wherever they played, draw the updated board

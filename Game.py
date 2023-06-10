@@ -64,9 +64,9 @@ class Game:
         for i in self.open_spots():
             if i < 9 and s_p > 0:   # small position is open and you have a small piece
                 indices.append(i)
-            elif i > 8 and i < 18 and m_p > 0: # open pos is med and you have med piece
+            elif i >=9 and i < 18 and m_p > 0: # open pos is med and you have med piece
                 indices.append(i)
-            elif i > 18 and b_p > 0: # open pos is big and you have a big piece
+            elif i >= 18 and b_p > 0: # open pos is big and you have a big piece
                 indices.append(i)
 
         return indices
@@ -150,7 +150,7 @@ class Game:
         Method to play game to win OR to full board
         :return: Player index OR 4 (to indicate tie)
         '''
-        p = 0
+        p = next_player
         while not self.full_board():
             self.single_move(p)
 

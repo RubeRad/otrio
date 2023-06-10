@@ -38,8 +38,13 @@ def record_game_results(number):
     return str_result_count, run_time, result_count
 
 def p0_start_whole_game_results(number, file):
+    headers = ['result']
+    for i in range(32):
+        headers.append('m{}'.format(i))
+
     p0_results_array = np.zeros((3,27), dtype=int)
     with open(file, 'w') as f:
+        print(','.join(headers), file=f)
         for i in range(number):
             g = Game()
             firstmove = g.single_move(0)
@@ -51,6 +56,10 @@ def p0_start_whole_game_results(number, file):
                 p0_results_array[2, firstmove] += 1
             else:
                 p0_results_array[1, firstmove] += 1
+
+            if i%100==0:
+                print('\n{}'.format(i), end='')
+            print('.', flush=True, end='')
 
             f.write(str(winner) + ',' + ','.join(g.move_tracker) + '\n')
 
